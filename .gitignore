@@ -1,0 +1,7 @@
+__pycache__/
+new_stock
+log/
+*.pkl
+downloads/
+.idea/
+*.pyc
