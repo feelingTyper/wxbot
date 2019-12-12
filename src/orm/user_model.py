@@ -10,9 +10,9 @@ db = DatabaseFactory.instance().get_conn('write')
 
 
 class UserModel(Model):
-    user_id = pw.FixedCharField(max_length=32, default=None, null=False)
-    nick_name = pw.FixedCharField(max_length=32, default='', null=False)
-    remark_name = pw.FixedCharField(max_length=32, null=True)
+    user_id = pw.FixedCharField(max_length=32, null=False)
+    nick_name = pw.FixedCharField(max_length=32, null=False)
+    remark_name = pw.FixedCharField(max_length=32, default=None, null=True)
     city = pw.FixedCharField(max_length=32, default=None, null=True)
     province = pw.FixedCharField(max_length=32, default=None, null=True)
     country = pw.FixedCharField(max_length=32, default=None, null=True)

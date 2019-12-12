@@ -11,4 +11,4 @@ class DatabaseWrite(peewee.MySQLDatabase):
                 passwd=kwargs['password'],
                 database=kwargs['database'],
                 port=kwargs['port'],
-                charset='utf8')
+                charset='utf8mb4')

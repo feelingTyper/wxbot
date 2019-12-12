@@ -10,17 +10,17 @@ db = DatabaseFactory.instance().get_conn('write')
 
 
 class MessageModel(Model):
-    user_id = pw.FixedCharField(max_length=32, default=None, null=False)
+    user_id = pw.FixedCharField(max_length=32, null=False)
     sender = pw.FixedCharField(max_length=32, default=None, null=True)
     sender_nick = pw.FixedCharField(max_length=32, default=None, null=True)
     group_name = pw.FixedCharField(max_length=32, default=None, null=True)
     receiver = pw.FixedCharField(max_length=32, default=None, null=True)
-    message_id = pw.FixedCharField(max_length=32, default=None, null=False)
-    type = pw.SmallIntegerField(default=None, null=False)
-    question = pw.SmallIntegerField(default=None, null=False)
-    answer = pw.FixedCharField(max_length=32, default=None, null=True)
+    message_id = pw.FixedCharField(max_length=32, null=False)
+    type = pw.SmallIntegerField(null=False)
+    question = pw.SmallIntegerField(null=False)
+    answer = pw.FixedCharField(max_length=32, null=True)
     content = pw.TextField(null=False)
-    extension = pw.FixedCharField(max_length=2048, null=False)
+    extension = pw.FixedCharField(max_length=2048, null=True)
     create_time = pw.IntegerField(null=False)
     receive_time = pw.IntegerField(null=False)
 
