@@ -16,11 +16,13 @@ def logit(func):
         start = time.time()
         try:
             result = func(self, *args, **kwargs)
-            logging.info('running class {} function {} success. time cost: {}'
+            logging.info(
+                    'running class {} function {} success. time cost: {}'
                     .format(self.__class__, func.__name__, time.time()-start))
             return result
-        except Exception as e:
-            logging.exception('running class {} function {} failed. time cost: {}'
+        except Exception:
+            logging.exception(
+                    'running class {} function {} failed. time cost: {}'
                     .format(self.__class__, func.__name__,  time.time()-start))
             return None
 
@@ -31,7 +33,7 @@ def timestamp2datetime(timestamp):
     try:
         d = datetime.datetime.fromtimestamp(timestamp)
         return d
-    except Exception as e:
+    except Exception:
         logging.error('parse timestamp fail')
 
 
@@ -40,7 +42,7 @@ def timestamp2datestring(timestamp):
         d = datetime.datetime.fromtimestamp(timestamp)
         date_str = d.strftime("%Y-%m-%d %H:%M:%S.%f")
         return date_str
-    except Exception as e:
+    except Exception:
         logging.error('parse timestamp fail')
 
 
@@ -51,8 +53,8 @@ def string2timestamp(strValue):
         timestamp = int(time.mktime(t))
         timestamp = float(str(timestamp) + str("%06d" % d.microsecond))/1000000
         return timestamp
-    except ValueError as e:
-        d = datetime.datetime.strptime(str2, "%Y-%m-%d %H:%M:%S")
+    except Exception:
+        d = datetime.datetime.strptime(strValue, "%Y-%m-%d %H:%M:%S")
         t = d.timetuple()
         timestamp = int(time.mktime(t))
         timestamp = float(str(timestamp) + str("%06d" % d.microsecond))/1000000
@@ -64,8 +66,8 @@ def datetime2timestamp(d):
         t = d.timetuple()
         timestamp = int(time.mktime(t))
         return timestamp
-    except ValueError:
-        d = datetime.datetime.strptime(str2, "%Y-%m-%d %H:%M:%S")
+    except Exception:
+        d = datetime.datetime.strptime(d, "%Y-%m-%d %H:%M:%S")
         t = d.timetuple()
         timestamp = int(time.mktime(t))
         timestamp = float(str(timestamp) + str("%06d" % d.microsecond))/1000000
@@ -105,8 +107,8 @@ def daybefore(days):
 
 
 def retries(retry=2, condition=False):
-    """
-    decorator for retry call function
+    """decorator for retry call function
+
     :param max retry times to recall the function, default 2
     :param condition condition to continue retry,
     general is the upexpected retrun value of the called function,
@@ -124,9 +126,11 @@ def retries(retry=2, condition=False):
                     result = func(*args, **kwargs)
                     if result is not condition:
                         return result
-                except Exception as e:
+                except Exception:
                     continue
-            logging.warning('running function {func} failed after retry {retry} times'.format(func=func.__name__, retry=retry))
+            logging.warning(
+                    'running function {func} failed after retry {retry} times'.
+                    format(func=func.__name__, retry=retry))
             return result
         return wrapped_function
     return decorator

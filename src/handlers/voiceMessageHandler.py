@@ -26,7 +26,7 @@ class VoiceMessageHandler(Handler):
         extension = {
             'length': message.voice_length,
         }
-        filename = '{path}/voices/{msgid}_{file_name}'.format(
+        filename = '{path}/downloads/voices/{msgid}_{file_name}'.format(
                 path=setting.app_path,
                 msgid=message.id,
                 file_name=message.file_name)

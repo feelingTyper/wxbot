@@ -27,7 +27,7 @@ class FileMessageHandler(Handler):
             'size': message.file_size,
             'media_id': message.media_id,
         }
-        filename = '{path}/files/{msgid}_{file_name}'.format(
+        filename = '{path}/downloads/files/{msgid}_{file_name}'.format(
                 path=setting.app_path,
                 msgid=message.id,
                 file_name=message.file_name)

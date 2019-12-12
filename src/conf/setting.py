@@ -11,7 +11,7 @@ MSG_HANDLERS = {
     ],
     wxpy.MAP: 'src.handlers.mapMessageHandler.MapMessageHandler',
     wxpy.CARD: 'src.handlers.cardMessageHandler.CardMessageHandler',
-    wxpy.NOTE: 'src.handlers.noteMessageHandler.NoteMessageHandler',
+    # wxpy.NOTE: 'src.handlers.noteMessageHandler.NoteMessageHandler',
     wxpy.SHARING: 'src.handlers.sharingMessageHandler.SharingMessageHandler',
     wxpy.PICTURE: 'src.handlers.pictureMessageHandler.PictureMessageHandler',
     wxpy.RECORDING: 'src.handlers.voiceMessageHandler.VoiceMessageHandler',
@@ -21,12 +21,13 @@ MSG_HANDLERS = {
 }
 
 robot = 4
+answer_limit = 100
 
 MSG_TYPES = [
     wxpy.TEXT,
     wxpy.MAP,
     wxpy.CARD,
-    wxpy.NOTE,
+    # wxpy.NOTE,
     wxpy.SHARING,
     wxpy.PICTURE,
     wxpy.RECORDING,
@@ -51,5 +52,7 @@ database = {
 }
 
 
-app_path = (os.path.abspath(os.path.dirname(__file__)).split('src')[0]
-            + 'downloads')
+app_path = os.path.abspath(os.path.dirname(__file__)).split('src')[0]
+
+question_pattern = r'[?,？,什么,么,谁,吗,哪,怎么,如何,到底,究竟,是不是,能不能,可不可以,呢, \
+多少,多久,多远,多快,哪些,还要,如何]'

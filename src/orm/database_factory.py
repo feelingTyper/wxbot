@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from ..util.dynamic_import import load_class_from_string as classloader
+from ..util.dynamic_import import Container
 from ..conf import setting
 
 import time
@@ -19,7 +19,7 @@ class DatabaseFactory:
         name = setting.database[db]['name']
         config = setting.database[db]['config']
         try:
-            classname = classloader(name)[0]
+            classname = Container.classLoader(name)[0]
             instance = classname(**config)
             instance.connect()
             self.instances[db] = instance

@@ -26,7 +26,7 @@ class VideoMessageHandler(Handler):
         extension = {
             'length': message.play_length,
         }
-        filename = '{path}/videos/{msgid}_{file_name}'.format(
+        filename = '{path}/downloads/videos/{msgid}_{file_name}'.format(
                 path=setting.app_path,
                 msgid=message.id,
                 file_name=message.file_name)

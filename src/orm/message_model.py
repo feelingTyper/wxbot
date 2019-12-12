@@ -18,6 +18,7 @@ class MessageModel(Model):
     message_id = pw.FixedCharField(max_length=32, default=None, null=False)
     type = pw.SmallIntegerField(default=None, null=False)
     question = pw.SmallIntegerField(default=None, null=False)
+    answer = pw.FixedCharField(max_length=32, default=None, null=True)
     content = pw.TextField(null=False)
     extension = pw.FixedCharField(max_length=2048, null=False)
     create_time = pw.IntegerField(null=False)

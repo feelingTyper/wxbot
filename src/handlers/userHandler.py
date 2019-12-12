@@ -22,7 +22,7 @@ class UserHandler(Handler):
             UserModel.select().where(
                     UserModel.user_id == sender.puid).get()
         except Exception:
-            avatar_url = '{path}/pics/{puid}_{nick}.jpg'.format(
+            avatar_url = '{path}/downloads/pics/{puid}_{nick}.jpg'.format(
                     path=setting.app_path,
                     puid=sender.puid,
                     nick=sender.nick_name
@@ -41,5 +41,4 @@ class UserHandler(Handler):
             )
             logging.info(model_to_dict(userModel))
             logging.info('insert new user')
-            print(model_to_dict(userModel))
             userModel.save()

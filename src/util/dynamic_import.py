@@ -1,34 +1,70 @@
+# coding: utf-8
+
+import time
+import threading
 import importlib
 
 
-def get_instance_from_string(classnames):
-    classnames = [classnames] if not isinstance(classnames, list) else classnames
-    instances = []
-    for classname in classnames:
-        try:
-            module, classname = classname.rsplit('.', 1)
-        except ValueError:
-            raise ImportError('{} looks like not a valid module path'.format(module))
-        module = importlib.import_module(module)
-        try:
-            instances.append(getattr(module, classname)())
-        except AttributeError:
-            raise ImportError('Module {} does not define {} attributr/class'.format(module, classname))
-    return instances
+class Container:
+    _instance_lock = threading.Lock()
 
+    def __init__(self, *args, **kwargs):
+        self.instances = {}
+        time.sleep(1)
 
-def load_class_from_string(classnames):
-    classnames = [classnames] if not isinstance(classnames, list) else classnames
-    instances = []
-    for classname in classnames:
-        try:
-            module, classname = classname.rsplit('.', 1)
-        except ValueError as e:
-            raise ImportError('{} looks like not a valid module path'.format(module))
+    @classmethod
+    def instance(cls, *args, **kwargs):
+        if not hasattr(Container, "_instance"):
+            with Container._instance_lock:
+                if not hasattr(Container, "_instance"):
+                    Container._instance = \
+                            Container(*args, **kwargs)
+        return Container._instance
 
-        module = importlib.import_module(module)
-        try:
-            instances.append(getattr(module, classname))
-        except AttributeError as e:
-            raise ImportError('Module {} does not define {} attributr/class'.format(module, classname))
-    return instances
+    def singleten(self, classname, *args, **kwargs):
+        return self.singletens(classname, *args, **kwargs)[0]
+
+    def singletens(self, classnames, *args, **kwargs):
+        classnames = [classnames] if not isinstance(classnames, list) \
+                else classnames
+        instances = []
+        for classname in classnames:
+            if classname in self.instances:
+                instances.append(self.instances.get(classname))
+                continue
+            try:
+                module, classname = classname.rsplit('.', 1)
+            except ValueError:
+                raise ImportError(
+                        '{} looks like not a valid module path'.
+                        format(module))
+            module = importlib.import_module(module)
+            try:
+                inst = getattr(module, classname)(*args, **kwargs)
+                instances.append(self.instances.setdefault(classname, inst))
+            except AttributeError:
+                raise ImportError(
+                        'Module {} does not define {} attributr/class'.
+                        format(module, classname))
+        return instances
+
+    @staticmethod
+    def classLoader(classnames):
+        classnames = [classnames] if not isinstance(classnames, list) \
+                else classnames
+        instances = []
+        for classname in classnames:
+            try:
+                module, classname = classname.rsplit('.', 1)
+            except ValueError:
+                raise ImportError(
+                        '{} looks like not a valid module path'.format(module))
+
+            module = importlib.import_module(module)
+            try:
+                instances.append(getattr(module, classname))
+            except AttributeError:
+                raise ImportError(
+                        'Module {} does not define {} attributr/class'.
+                        format(module, classname))
+        return instances

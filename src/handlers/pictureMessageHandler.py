@@ -27,7 +27,7 @@ class PictureMessageHandler(Handler):
             'height': message.img_height,
             'width': message.img_width
         }
-        filename = '{path}/pics/{msgid}_{file_name}'.format(
+        filename = '{path}/downloads/pics/{msgid}_{file_name}'.format(
                 path=setting.app_path,
                 msgid=message.id,
                 file_name=message.file_name)
