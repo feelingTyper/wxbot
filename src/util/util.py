@@ -4,7 +4,10 @@ import re
 import time
 import logging
 import datetime
+
+
 from functools import wraps
+from ..conf import setting
 
 
 def logit(func):
@@ -140,3 +143,13 @@ def message_desc(content):
     result = re.search(r'<des>([\s\S]+?)</des>', content)
     if result:
         return result.group(1)
+
+
+def question(content):
+    if re.search(setting.question_pattern, content):
+        return True
+    return False
+
+
+def nohighlight(content):
+    return content.replace('<em>', '').replace('</em>', '')

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import re
 import wxpy
 import logging
 
@@ -25,19 +24,19 @@ class TextMessageHandler(Handler):
         createTime = util.datetime2timestamp(message.create_time)
         receiveTime = util.datetime2timestamp(message.receive_time)
         messageModel = MessageModel(
-                user_id=sender.puid,
-                sender=sender.name,
-                sender_nick=sender.nick_name,
-                group_name=message.sender.name,
-                receiver=message.receiver.name,
-                message_id=message.id,
-                type=setting.MSG_TYPES.index(message.type),
-                question=self.question(message),
-                answer=self.answer(message),
-                content=message.text,
-                create_time=createTime,
-                receive_time=receiveTime,
-                )
+            user_id=sender.puid,
+            sender=sender.name,
+            sender_nick=sender.nick_name,
+            group_name=message.sender.name,
+            receiver=message.receiver.name,
+            message_id=message.id,
+            type=setting.MSG_TYPES.index(message.type),
+            question=util.question(message.text),
+            answer=self.answer(message),
+            content=message.text,
+            create_time=createTime,
+            receive_time=receiveTime,
+            )
         logging.info(model_to_dict(messageModel))
         logging.info(
                 'question answers: {}'.
@@ -45,13 +44,6 @@ class TextMessageHandler(Handler):
         messageModel.save()
 
         return message
-
-    def question(self, message):
-        pattern = setting.question_pattern
-
-        if re.search(pattern, message.text):
-            return True
-        return False
 
     def answer(self, message):
         question, answers = \
@@ -62,7 +54,7 @@ class TextMessageHandler(Handler):
             question = 0
             answers = 0
 
-        if self.question(message):
+        if util.question(message.text):
             question = message.id
             answers = 0
 

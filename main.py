@@ -30,7 +30,7 @@ bot.enable_puid()
 
 @bot.register(
         chats=[wxpy.Group, wxpy.FRIENDS, bot.file_helper],
-        # msg_types=MSG_TYPES,
+        msg_types=setting.MSG_TYPES,
         except_self=False,
         run_async=True)
 def listen_message(msg):
@@ -48,6 +48,25 @@ def deal_message(message):
     msg_handlers = setting.MSG_HANDLERS.get(message.type)
     msg_handlers = container.singletens(msg_handlers)
 
+    for msg_handler in msg_handlers:
+        msg_handler.run(message)
+
+
+@bot.register(
+        chats=[bot.file_helper],
+        # msg_types=setting.MSG_TYPES,
+        except_self=False,
+        run_async=True)
+def file_helper(msg):
+    global message
+    message = msg
+    print(msg.text, msg.type)
+    msg_handlers = [
+        'src.handlers.textMessageHandler.TextMessageHandler',
+        'src.handlers.userHandler.UserHandler',
+        'src.handlers.searchArticleHandler.SearchArticleHandler'
+    ]
+    msg_handlers = container.singletens(msg_handlers)
     for msg_handler in msg_handlers:
         msg_handler.run(message)
 
