@@ -3,7 +3,9 @@
 import wxpy
 from src import log
 from src.conf import setting
+from src.util.timer import Timer
 from src.util.dynamic_import import Container
+from src.tasks.keepAliveTask import KeepAliveTask
 
 
 log.init_log('log/process')
@@ -11,10 +13,12 @@ log.init_log('log/process')
 
 def login_callback():
     pass
+    # bot.file_helper.send_message('Hello')
 
 
 def logout_callback():
     pass
+    # bot.file_helper.send_message('Bye')
 
 
 message = None
@@ -29,7 +33,7 @@ bot.enable_puid()
 
 
 @bot.register(
-        chats=[wxpy.Group, wxpy.FRIENDS, bot.file_helper],
+        chats=[wxpy.Group],
         msg_types=setting.MSG_TYPES,
         except_self=False,
         run_async=True)
@@ -71,4 +75,11 @@ def file_helper(msg):
         msg_handler.run(message)
 
 
+task = KeepAliveTask(bot)
+timer = Timer(task, 3600, True)
+timer.start()
+
+
 wxpy.embed()
+
+timer.stop()

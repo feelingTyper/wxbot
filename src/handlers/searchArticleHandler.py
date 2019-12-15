@@ -19,8 +19,8 @@ class SearchArticleHandler(Handler):
         self.url = setting.search_url
 
     def process(self, message):
-        # if not message.is_at:
-        #     return message
+        if not message.is_at:
+            return message
 
         answer = self.replyMsg(message)
 
@@ -33,9 +33,9 @@ class SearchArticleHandler(Handler):
         url = self.url.format(urllib.parse.quote(message.text))
         logging.info(url)
         response = self.request.get(url)
+        idx = 0
         articles = []
         try:
-            idx = 0
             response = json.loads(response)
             for article in response['data']['search']:
                 articles.append({
@@ -53,6 +53,10 @@ class SearchArticleHandler(Handler):
                     format(message.text))
             logging.error(response)
             return setting.no_answer
+
+        if not idx:
+            return setting.no_answer
+
         answer = setting.answer_template.format(
                 len(articles), self.answerTemplate(articles))
         return answer
@@ -66,6 +70,8 @@ class SearchArticleHandler(Handler):
         return '\n\n'.join(phrases)
 
     def short(self, uri):
+        return uri
+
         data = {
             'url': base64.b64encode(uri.encode('utf-8')),
             'from': 'w',
@@ -76,10 +82,10 @@ class SearchArticleHandler(Handler):
                '?url={}&from={}&site={}'.format(
                    data['url'].decode('utf-8'), data['from'], data['site']))
         response = self.request.get(url)
-        logging.info(url)
-        logging.info(response)
         try:
             response = json.load(response)
-            return response['ShortUrl']
+            return response['data']['short_url']
         except Exception:
+            logging.error(url)
+            logging.error(response)
             return uri

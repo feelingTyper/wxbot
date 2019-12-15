@@ -18,6 +18,11 @@ class UserHandler(Handler):
         sender = message.sender
         if isinstance(message.sender, wxpy.Group):
             sender = message.member
+
+        self.save(sender)
+        return message
+
+    def save(self, sender):
         try:
             UserModel.select().where(
                     UserModel.user_id == sender.puid).get()

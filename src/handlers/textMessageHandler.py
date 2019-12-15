@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 import wxpy
 import logging
 
@@ -21,6 +22,8 @@ class TextMessageHandler(Handler):
         if isinstance(message.sender, wxpy.Group):
             sender = message.member
 
+        target, content = self.pure(message)
+
         createTime = util.datetime2timestamp(message.create_time)
         receiveTime = util.datetime2timestamp(message.receive_time)
         messageModel = MessageModel(
@@ -28,12 +31,12 @@ class TextMessageHandler(Handler):
             sender=sender.name,
             sender_nick=sender.nick_name,
             group_name=message.sender.name,
-            receiver=message.receiver.name,
+            receiver=target,
             message_id=message.id,
             type=setting.MSG_TYPES.index(message.type),
             question=util.question(message.text),
             answer=self.answer(message),
-            content=message.text,
+            content=content,
             create_time=createTime,
             receive_time=receiveTime,
             )
@@ -61,3 +64,21 @@ class TextMessageHandler(Handler):
         self.messages[message.sender.puid] = [question, answers]
 
         return question
+
+    def pure(self, message):
+        target = message.receiver.puid
+
+        if not re.search(r'@', message.text) or \
+           not hasattr(message.sender, 'members'):
+            return target, message.text
+
+        members = message.sender.members
+        for user in members:
+            if re.search(user.name, message.text) or \
+               re.search(user.nick_name, message.text):
+                target = user.puid
+                (message.text.replace(user.name, '')
+                        .replace(user.nick_name, '')
+                        .replace('@', ''))
+                break
+        return target, message.text
