@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{%block title %} Messages {% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <table class="table table-bordered">
+      <thead>
+        <th>sender</th>
+        <th>receiver</th>
+        <th>group</th>
+        <th>content</th>
+        <th>time</th>
+      </thead>
+      <tbody>
+          <tr>
+            <td>{{ message.sender }}</td>
+            <td>{{ message.receiver }}</td>
+            <td>{{ message.group_name }}</td>
+            <td>{{ message.content }}</td>
+            <td>{{ message.create_time }}</td>
+          </tr>
+      </tbody>
+  </table>
+  <hr>
+  <h3>Answers:</h3>
+  <hr>
+  <h4>strategy 1:</h4>
+  <table class="table table-bordered">
+      <thead>
+        <th>answer</th>
+        <th>group</th>
+        <th>content</th>
+        <th>time</th>
+      </thead>
+      <tbody>
+          {% for answer in answers %}
+          <tr>
+              <td><a href="/user/{{ answer.user_id }}">{{ answer.sender }}</a></td>
+              <td><a href="/group/{{ answer.group_id }}">{{ answer.group_name }}</a></td>
+            <td>{{ answer.content }}</td>
+            <td>{{ answer.create_time }}</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+<h4>strategy 2:</h4>
+  <table class="table table-bordered">
+      <thead>
+        <th>answer</th>
+        <th>group</th>
+        <th>content</th>
+        <th>time</th>
+      </thead>
+      <tbody>
+          {% for answer in answers2 %}
+          <tr>
+              <td><a href="/user/{{ answer.user_id }}">{{ answer.sender }}</a></td>
+              <td><a href="/group/{{ answer.group_id }}">{{ answer.group_name }}</a></td>
+            <td>{{ answer.content }}</td>
+            <td>{{ answer.create_time }}</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+
+</div>
+{%endblock%}

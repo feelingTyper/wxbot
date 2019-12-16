@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{%block title %} Messages {% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="row">
+  <table class="table table-bordered">
+      <thead>
+        <th>sender</th>
+        <th>receiver</th>
+        <th>group</th>
+        <th>content</th>
+        <th>time</th>
+      </thead>
+      <tbody>
+        {% for message in messages %}
+          <tr>
+              <td><a href="/user/{{ message.user_id }}">{{ message.sender }}</a></td>
+              <td><a href="user/{{ message.receiver }}">{{ message.receiver }}</a></td>
+            <td>{{ message.group_name }}</td>
+            <td><a href="/message/{{ message.message_id }}">{{ message.content }}</a></td>
+            <td>{{ message.create_time }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+  </table>
+  </div>
+</div>
+{%endblock%}

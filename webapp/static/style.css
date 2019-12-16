@@ -1,0 +1,16 @@
+.avatar {
+    width: 150px;
+    height: auto;
+}
+
+table {
+    text-align:center;
+    table-layout:fixed;
+    word-wrap:break-word;word-break;break-all;
+}
+html{height:100%;}
+body{min-height:100%;margin:0;padding:0;position:relative;}
+
+header{background-color: #ffe4c4;}
+.main{padding-bottom:100px;background-color: #fff;}
+#footer{position:absolute;bottom:0;width:100%;height:100px;background-color: #eee;}

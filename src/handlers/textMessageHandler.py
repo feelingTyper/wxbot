@@ -85,7 +85,8 @@ class TextMessageHandler(Handler):
                 content = (message.text
                            .replace(user.name, '')
                            .replace(user.nick_name, '')
-                           .replace('@', ''))
+                           .replace('@', '')
+                           .replace('\\u2005', ''))
                 logging.info(content)
                 break
         return target, content
