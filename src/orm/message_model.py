@@ -13,6 +13,7 @@ class MessageModel(Model):
     user_id = pw.FixedCharField(max_length=32, null=False)
     sender = pw.FixedCharField(max_length=32, default=None, null=True)
     sender_nick = pw.FixedCharField(max_length=32, default=None, null=True)
+    group_id = pw.FixedCharField(max_length=32, null=False)
     group_name = pw.FixedCharField(max_length=32, default=None, null=True)
     receiver = pw.FixedCharField(max_length=32, default=None, null=True)
     message_id = pw.FixedCharField(max_length=32, null=False)

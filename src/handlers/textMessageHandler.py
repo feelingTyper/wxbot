@@ -30,6 +30,7 @@ class TextMessageHandler(Handler):
             user_id=sender.puid,
             sender=sender.name,
             sender_nick=sender.nick_name,
+            group_id=message.sender.puid,
             group_name=message.sender.name,
             receiver=target,
             message_id=message.id,
@@ -67,18 +68,24 @@ class TextMessageHandler(Handler):
 
     def pure(self, message):
         target = message.receiver.puid
+        content = message.text
 
         if not re.search(r'@', message.text) or \
            not hasattr(message.sender, 'members'):
-            return target, message.text
+            return target, content
 
         members = message.sender.members
         for user in members:
-            if re.search(user.name, message.text) or \
-               re.search(user.nick_name, message.text):
+            if (message.text.find(user.name) is not -1 or
+               message.text.find(user.nick_name) is not -1):
                 target = user.puid
-                (message.text.replace(user.name, '')
-                        .replace(user.nick_name, '')
-                        .replace('@', ''))
+                logging.info(content)
+                logging.info(user.name)
+                logging.info(user.nick_name)
+                content = (message.text
+                           .replace(user.name, '')
+                           .replace(user.nick_name, '')
+                           .replace('@', ''))
+                logging.info(content)
                 break
-        return target, message.text
+        return target, content

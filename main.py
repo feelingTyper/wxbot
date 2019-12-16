@@ -76,7 +76,7 @@ def file_helper(msg):
 
 
 task = KeepAliveTask(bot)
-timer = Timer(task, 3600, True)
+timer = Timer(task, 1200, True)
 timer.start()
 
 

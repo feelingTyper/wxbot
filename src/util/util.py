@@ -43,7 +43,7 @@ def timestamp2datetime(timestamp):
 def timestamp2datestring(timestamp):
     try:
         d = datetime.datetime.fromtimestamp(timestamp)
-        date_str = d.strftime("%Y-%m-%d %H:%M:%S.%f")
+        date_str = d.strftime("%Y-%m-%d %H:%M:%S")
         return date_str
     except Exception:
         logging.error('parse timestamp fail')
@@ -146,7 +146,9 @@ def message_desc(content):
 
 
 def question(content):
-    if re.search(setting.question_pattern, content):
+    pattern = '|'.join(['({})'.format(item.strip()) for item in
+                       setting.question_pattern.strip().split(',')])
+    if re.search(pattern, content):
         return True
     return False
 

@@ -7,14 +7,15 @@ import wxpy
 MSG_HANDLERS = {
     wxpy.TEXT: [
         'src.handlers.textMessageHandler.TextMessageHandler',
-        'src.handlers.userHandler.UserHandler'
+        'src.handlers.userHandler.UserHandler',
+        'src.handlers.groupHandler.GroupHandler'
     ],
     wxpy.MAP: 'src.handlers.mapMessageHandler.MapMessageHandler',
     wxpy.CARD: [
         'src.handlers.friendsMessageHandler.FriendsMessageHandler',
         'src.handlers.userHandler.UserHandler'
     ],
-    # wxpy.NOTE: 'src.handlers.noteMessageHandler.NoteMessageHandler',
+    wxpy.NOTE: 'src.handlers.groupHandler.GroupHandler',
     wxpy.SHARING: 'src.handlers.sharingMessageHandler.SharingMessageHandler',
     wxpy.PICTURE: 'src.handlers.pictureMessageHandler.PictureMessageHandler',
     wxpy.RECORDING: 'src.handlers.voiceMessageHandler.VoiceMessageHandler',
@@ -33,7 +34,7 @@ MSG_TYPES = [
     wxpy.TEXT,
     wxpy.MAP,
     wxpy.CARD,
-    # wxpy.NOTE,
+    wxpy.NOTE,
     wxpy.SHARING,
     wxpy.PICTURE,
     wxpy.RECORDING,
@@ -60,8 +61,8 @@ database = {
 
 app_path = os.path.abspath(os.path.dirname(__file__)).split('src')[0]
 
-question_pattern = r'[?,？,什么,么,谁是,吗,哪,怎么,如何,到底,究竟,是不是,能不能,可不可以,呢, \
-多少,多久,多远,多快,哪些,还要,如何]'
+question_pattern = ('\\?,？,谁是,吗,哪,怎么,如何,到底,究竟,是不是,能不能,'
+                    '可不可以,多少,多久,多远,多快,哪些,还要,如何')
 
 search_url = ('https://songguojiankang.com/community/'
               'search?word={}&type=1')
