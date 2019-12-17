@@ -69,7 +69,7 @@ question_pattern = ('\\?,？,谁是,吗,哪,怎么,如何,到底,究竟,是不�
                     '可不可以,多少,多久,多远,多快,哪些,还要,如何,咋回事')
 
 search_url = ('https://songguojiankang.com/community/'
-              'search?word={}&type=1')
+              'search?word={}')
 
 article_url = 'https://h5.xiangyujiankang.com/community/article-share/{}'
 answer_template = '【帮您找到了{}篇病友在相愈社区分享的经验】\n\n {}'
@@ -85,3 +85,5 @@ dwz_header = {
 sync_groups = {
     '454c1ad2': '8群|微医-女性乳腺健康交流群'
 }
+
+search_type_name = ['动态', '经验', '自媒体', '提问', '回答', '评论']

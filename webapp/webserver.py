@@ -2,9 +2,11 @@
 
 import re
 import sys
+import json
 import logging
 
 from flask import Flask
+from flask import request
 from flask import render_template
 from playhouse.shortcuts import model_to_dict
 
@@ -16,6 +18,7 @@ from src.orm.group_model import GroupModel
 from src.orm.user_model import UserModel
 from src.util import util
 from src.util.util import timestamp2datestring as t2d
+from src.util.request import RemoteRequest
 
 
 app = Flask(__name__)
@@ -25,7 +28,7 @@ app = Flask(__name__)
 def messages():
     messages = (MessageModel
                 .select()
-                .where(MessageModel.group_name == '8群|微医-女性乳腺健康交流群'))
+                .where(MessageModel.group_id == '454c1ad2'))
 
     for message in messages:
         message.type = setting.MSG_TYPES[message.type]
@@ -40,7 +43,8 @@ def questions():
     messages = (MessageModel
                 .select()
                 .where(MessageModel.type == 0)
-                .where(MessageModel.question == 1))
+                .where(MessageModel.question == 1)
+                .where(MessageModel.group_id == '454c1ad2'))
 
     for message in messages:
         message.type = setting.MSG_TYPES[message.type]
@@ -52,10 +56,13 @@ def questions():
 
 @app.route('/message/<int:mid>', methods=['GET'])
 def message(mid):
-    message = (MessageModel
-               .select()
-               .where(MessageModel.message_id == mid)
-               .get())
+    try:
+        message = (MessageModel
+                   .select()
+                   .where(MessageModel.message_id == mid)
+                   .get())
+    except Exception:
+        return render_template('message.html')
 
     answers = (MessageModel
                .select()
@@ -70,6 +77,20 @@ def message(mid):
                 .where(MessageModel.group_name == message.group_name)
                 .where(MessageModel.create_time <= message.create_time+3600))
 
+    answers3 = []
+    try:
+        response = (RemoteRequest()
+                    .get(setting.search_url.format(message.content)))
+        response = json.loads(response)
+        for answer in response['data']['search']:
+            answer['create_time'] = t2d(answer['create_time'])
+            answer['type'] = setting.search_type_name[answer['type']]
+            answer['url'] = setting.article_url.format(answer['index_id'])
+            answers3.append(answer)
+    except Exception:
+        logging.error('search community error of query {}'
+                      .format(message.content))
+
     message.create_time = t2d(message.create_time)
     for answer in answers:
         answer.create_time = t2d(answer.create_time)
@@ -79,15 +100,20 @@ def message(mid):
     return render_template('message.html',
                            message=message,
                            answers=answers,
-                           answers2=answers2)
+                           answers2=answers2,
+                           answers3=answers3)
 
 
 @app.route('/user/<uid>', methods=['GET'])
 def user(uid):
-    user = (UserModel
-            .select()
-            .where(UserModel.user_id == uid)
-            .get())
+    try:
+        user = (UserModel
+                .select()
+                .where(UserModel.user_id == uid)
+                .get())
+    except Exception:
+        return render_template('user.html')
+
     user.avatar_url = 'stores{}'.format(
         user.avatar_url.split('downloads')[1])
 
@@ -113,7 +139,7 @@ def answers():
     answers = (MessageModel
                .select()
                .where(MessageModel.question == 0)
-               .where(MessageModel.group_name == '8群|微医-女性乳腺健康交流群'))
+               .where(MessageModel.group_id == '454c1ad2'))
 
     for answer in answers:
         answer.create_time = t2d(answer.create_time)
@@ -165,14 +191,10 @@ def doquestion():
     messages = (MessageModel
                 .select()
                 .where(MessageModel.type == 0)
-                .where(MessageModel.group_name == '8群|微医-女性乳腺健康交流群'))
-
-    group = (GroupModel
-             .select()
-             .where(GroupModel.group_name == '8群|微医-女性乳腺健康交流群')
-             .get())
+                .where(MessageModel.group_id == '454c1ad2'))
 
     new_messages = []
+    question_id = None
     for message in messages:
         user_id = None
         user_name, content = pure(message.content)
@@ -181,19 +203,23 @@ def doquestion():
             if not user_id:
                 continue
         message.question = util.question(content)
-        message.group_id = group.group_id
+        if message.question:
+            question_id = message.message_id
+        if not message.answer:
+            message.answer = question_id
         message.content = content
         if user_id and isinstance(user_id, str):
             message.receiver = user_id
         new_messages.append(model_to_dict(message))
 
     message.replace_many(new_messages).execute()
+
     result = {
         'code': 0,
         'msg': '',
         'data': new_messages
     }
-    import json
+
     return json.dumps(result)
 
 
@@ -204,7 +230,7 @@ def users():
     for member in members:
         user_ids.append(member.user_id)
 
-    users = UserModel.select().where(UserModel.user_id in user_ids)
+    users = UserModel.select().where(UserModel.user_id << user_ids)
     for user in users:
         user.avatar_url = 'stores{}'.format(
             user.avatar_url.split('downloads')[1])
@@ -214,9 +240,36 @@ def users():
 
 @app.route('/groups', methods=['GET'])
 def groups():
-    members = GroupModel.select().where(GroupModel.group_id == '454c1ad2')
+    members = (GroupModel.select()
+               # .join(UserModel, on=(GroupModel.user_id == UserModel.user_id))
+               .where(GroupModel.group_id == '454c1ad2'))
+
+    # members = [model_to_dict(member) for member in members]
+    # return json.dumps(members)
 
     return render_template('groups.html', members=members)
+
+
+@app.route('/group/<groupid>', methods=['GET'])
+def group(groupid):
+    members = GroupModel.select().where(GroupModel.group_id == groupid)
+
+    return render_template('groups.html', members=members)
+
+
+@app.route('/search', methods=['GET'])
+def search():
+    word = request.args.get('search', '')
+    messages = (MessageModel
+                .select()
+                .where(MessageModel.content % '%{}%'.format(word)))
+
+    for message in messages:
+        message.type = setting.MSG_TYPES[message.type]
+        message.question = 'Yes' if message.question else 'No'
+        message.create_time = t2d(message.create_time)
+
+    return render_template('questions.html', messages=messages)
 
 
 if __name__ == '__main__':

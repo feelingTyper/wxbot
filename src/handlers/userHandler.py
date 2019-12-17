@@ -23,11 +23,14 @@ class UserHandler(Handler):
         return message
 
     def save(self, sender):
+        user = None
         try:
             user = UserModel.select().where(
                     UserModel.user_id == sender.puid).get()
-
-            if user.nick_name is not sender.nick_name:
+            if user.nick_name != sender.nick_name:
+                logging.debug(user.nick_name)
+                logging.debug(sender.nick_name)
+                logging.debug('*'*100)
                 logging.info('update user info')
                 raise
         except Exception:
@@ -49,7 +52,14 @@ class UserHandler(Handler):
                 update_time=int(time.time()),
             )
 
+            if user:
+                userModel.id = user.id
+
             userModel.save()
+            # rowid = (UserModel
+            #          .insert(**model_to_dict(userModel))
+            #          .on_conflict(update=model_to_dict(userModel))
+            #          .execute())
 
             logging.info(model_to_dict(userModel))
             logging.info('insert user success')

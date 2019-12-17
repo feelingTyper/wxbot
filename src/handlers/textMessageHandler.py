@@ -79,14 +79,10 @@ class TextMessageHandler(Handler):
             if (message.text.find(user.name) != -1 or
                message.text.find(user.nick_name) != -1):
                 target = user.puid
-                logging.info(content)
-                logging.info(user.name)
-                logging.info(user.nick_name)
                 content = (message.text
                            .replace(user.name, '')
                            .replace(user.nick_name, '')
                            .replace('@', '')
                            .replace('\\u2005', ''))
-                logging.info(content)
                 break
         return target, content

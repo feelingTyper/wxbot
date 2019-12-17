@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{%block title %} Messages {% endblock %}
+{%block title %} Message Detail {% endblock %}
 
 {% block head %}
     {{ super() }}
@@ -8,6 +8,7 @@
 
 {% block content %}
 <div class="container-fluid">
+  <div class="col-md-12">
   <table class="table table-bordered">
       <thead>
         <th>sender</th>
@@ -26,10 +27,23 @@
           </tr>
       </tbody>
   </table>
+  </div>
   <hr>
-  <h3>Answers:</h3>
+  <div class="col-md-12">
+      <h3>相关回答:</h3>
+    <table class="table">
+        <tr>
+            <td><a href="#ans1">回答判别方案 1</a></td> 
+            <td><a href="#ans2">回答判别方案 2</a></td> 
+            <td><a href="#ans3">社区相关经验/问答</a></td> 
+        </tr>
+    </table>
+  </div>
   <hr>
-  <h4>strategy 1:</h4>
+  <div class="col-md-12" id="ans1">
+    <h4>回答判别方案 1:</h4>
+  </div>
+  <div class="col-md-12">
   <table class="table table-bordered">
       <thead>
         <th>answer</th>
@@ -48,7 +62,11 @@
           {% endfor %}
       </tbody>
   </table>
-<h4>strategy 2:</h4>
+  </div>
+  <div class="col-md-12" id="ans2">
+    <h4>回答判别方案 2:</h4>
+  </div>
+  <div class="col-md-12">
   <table class="table table-bordered">
       <thead>
         <th>answer</th>
@@ -67,6 +85,34 @@
           {% endfor %}
       </tbody>
   </table>
+  </div>
 
+  <div class="col-md-12" id="ans3">
+    <h2>社区相关经验/问答</h2>
+    <table class="table table-bordered">
+      <thead>
+        <th>answer</th>
+        <th>avatar</th>
+        <th>title</th>
+        <th>summary</th>
+        <th>type</th>
+        <th>time</th>
+      </thead>
+      <tbody>
+          {% autoescape false %}
+          {% for answer in answers3 %}
+          <tr>
+            <td>{{ answer['author_nickname'] }}</td>
+            <td><img class="avatar" src="{{ answer['author_avatar_url'] }}"></td>
+            <td><a target="_blank" href="{{ answer['url'] }}">{{ answer['title'] }}</a></td>
+            <td>{{ answer['content'] }}</td>
+            <td>{{ answer['type'] }}</td>
+            <td>{{ answer['create_time'] }}</td>
+          </tr>
+          {% endfor %}
+          {% endautoescape %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {%endblock%}

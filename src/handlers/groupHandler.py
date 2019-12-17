@@ -48,6 +48,7 @@ class GroupHandler(Handler):
             try:
                 (GroupModel.select()
                            .where(GroupModel.user_id == member.puid)
+                           .where(GroupModel.group_id == group.puid)
                            .get())
             except Exception:
                 groups.append(model_to_dict(GroupModel(
