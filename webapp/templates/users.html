@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{%block title %} Messages {% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+<div class="col-md-12">
+  <table class="table table-bordered">
+      <thead>
+        <th>nickname</th>
+        <th>remark name</th>
+        <th>city</th>
+        <th>province</th>
+        <th>country</th>
+        <th>avatar_url</th>
+        <th>gender</th>
+        <th>signature</th>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td><a href="/user/{{ user.user_id }}">{{ user.nick_name }}</a></td>
+          <td>{{ user.remark_name }}</td>
+          <td>{{ user.city }}</td>
+          <td>{{ user.province }}</td>
+          <td>{{ user.country }}</td>
+          <td><img class="avatar" src="{{ url_for('static', filename=user.avatar_url) }}"></td>
+          <td>{{ user.gender }}</td>
+          <td>{{ user.signature }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+  </table>
+</div>
+</div>
+{%endblock%}

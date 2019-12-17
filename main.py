@@ -6,6 +6,7 @@ from src.conf import setting
 from src.util.timer import Timer
 from src.util.dynamic_import import Container
 from src.tasks.keepAliveTask import KeepAliveTask
+from src.tasks.syncUserTask import SyncUserTask
 
 
 log.init_log('log/process')
@@ -75,11 +76,13 @@ def file_helper(msg):
         msg_handler.run(message)
 
 
-task = KeepAliveTask(bot)
-timer = Timer(task, 1200, True)
-timer.start()
+t1 = Timer(KeepAliveTask(bot), 1200, True)
+t2 = Timer(SyncUserTask(bot), 3600*3, True)
+t1.start()
+t2.start()
 
 
 wxpy.embed()
 
-timer.stop()
+t1.stop()
+t2.stop()

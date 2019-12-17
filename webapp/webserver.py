@@ -90,7 +90,22 @@ def user(uid):
             .get())
     user.avatar_url = 'stores{}'.format(
         user.avatar_url.split('downloads')[1])
-    return render_template('user.html', user=user)
+
+    questions = (MessageModel
+                 .select()
+                 .where(MessageModel.user_id == user.user_id)
+                 .where(MessageModel.type == 0)
+                 .where(MessageModel.question == 1))
+    answers = (MessageModel
+               .select()
+               .where(MessageModel.user_id == user.user_id)
+               .where(MessageModel.type == 0)
+               .where(MessageModel.question == 0))
+
+    return render_template('user.html',
+                           user=user,
+                           questions=questions,
+                           answers=answers)
 
 
 @app.route('/answers', methods=['GET'])
@@ -134,6 +149,7 @@ def get_user_id(user_name):
         if not isinstance(user_id, str):
             raise
     except Exception:
+        # 解决特例
         if user_name.find('嘿嘿哟'):
             user_id = '1d996a78'
         if user_name.find('风轻云淡'):
@@ -144,7 +160,7 @@ def get_user_id(user_name):
     return user_id
 
 
-@app.route('/doquestion', methods=['GET'])
+@app.route('/doquestion', methods=['POST'])
 def doquestion():
     messages = (MessageModel
                 .select()
@@ -179,6 +195,28 @@ def doquestion():
     }
     import json
     return json.dumps(result)
+
+
+@app.route('/users', methods=['GET'])
+def users():
+    user_ids = []
+    members = GroupModel.select().where(GroupModel.group_id == '454c1ad2')
+    for member in members:
+        user_ids.append(member.user_id)
+
+    users = UserModel.select().where(UserModel.user_id in user_ids)
+    for user in users:
+        user.avatar_url = 'stores{}'.format(
+            user.avatar_url.split('downloads')[1])
+
+    return render_template('users.html', users=users)
+
+
+@app.route('/groups', methods=['GET'])
+def groups():
+    members = GroupModel.select().where(GroupModel.group_id == '454c1ad2')
+
+    return render_template('groups.html', members=members)
 
 
 if __name__ == '__main__':

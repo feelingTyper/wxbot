@@ -36,5 +36,50 @@
       </tbody>
   </table>
 </div>
+<div class="col-md-12">
+    <h3>His Questions</h3>
+    <hr>
+  <table class="table table-bordered">
+    <thead>
+      <th>receiver</th>
+      <th>group</th>
+      <th>content</th>
+      <th>time</th>
+    </thead>
+    <tbody>
+      {% for message in questions %}
+      <tr>
+        <td><a href="/user/{{ message.receiver }}">{{ message.receiver }}</a></td>
+        <td>{{ message.group_name }}</td>
+        <td><a href="/message/{{ message.message_id }}">{{ message.content }}</a></td>
+        <td>{{ message.create_time }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="col-md-12">
+    <h3>His Answers</h3>
+    <hr>
+  <table class="table table-bordered">
+    <thead>
+      <th>receiver</th>
+      <th>group</th>
+      <th>content</th>
+      <th>time</th>
+    </thead>
+    <tbody>
+      {% for message in answers %}
+      <tr>
+        <td><a href="/user/{{ message.receiver }}">{{ message.receiver }}</a></td>
+        <td>{{ message.group_name }}</td>
+        <td><a href="/message/{{ message.message_id }}">{{ message.content }}</a></td>
+        <td>{{ message.create_time }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 </div>
 {%endblock%}

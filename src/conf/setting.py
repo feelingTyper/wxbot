@@ -4,6 +4,10 @@ import os
 import wxpy
 
 
+handlers = {
+    'user': 'src.handlers.userHandler.UserHandler'
+}
+
 MSG_HANDLERS = {
     wxpy.TEXT: [
         'src.handlers.textMessageHandler.TextMessageHandler',
@@ -62,7 +66,7 @@ database = {
 app_path = os.path.abspath(os.path.dirname(__file__)).split('src')[0]
 
 question_pattern = ('\\?,？,谁是,吗,哪,怎么,如何,到底,究竟,是不是,能不能,'
-                    '可不可以,多少,多久,多远,多快,哪些,还要,如何')
+                    '可不可以,多少,多久,多远,多快,哪些,还要,如何,咋回事')
 
 search_url = ('https://songguojiankang.com/community/'
               'search?word={}&type=1')
@@ -76,4 +80,8 @@ short_service = 'http://dwz.wailian.work/api.php'
 dwz_header = {
     'Host': 'https://dwz.wailian.work',
     'Referer': 'http://dwz.wailian.work/',
+}
+
+sync_groups = {
+    '454c1ad2': '8群|微医-女性乳腺健康交流群'
 }

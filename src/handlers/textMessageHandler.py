@@ -76,8 +76,8 @@ class TextMessageHandler(Handler):
 
         members = message.sender.members
         for user in members:
-            if (message.text.find(user.name) is not -1 or
-               message.text.find(user.nick_name) is not -1):
+            if (message.text.find(user.name) != -1 or
+               message.text.find(user.nick_name) != -1):
                 target = user.puid
                 logging.info(content)
                 logging.info(user.name)

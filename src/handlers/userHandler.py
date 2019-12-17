@@ -24,8 +24,12 @@ class UserHandler(Handler):
 
     def save(self, sender):
         try:
-            UserModel.select().where(
+            user = UserModel.select().where(
                     UserModel.user_id == sender.puid).get()
+
+            if user.nick_name is not sender.nick_name:
+                logging.info('update user info')
+                raise
         except Exception:
             avatar_url = '{path}/downloads/pics/{puid}_{nick}.jpg'.format(
                     path=setting.app_path,
@@ -44,6 +48,8 @@ class UserHandler(Handler):
                 create_time=int(time.time()),
                 update_time=int(time.time()),
             )
-            logging.info(model_to_dict(userModel))
-            logging.info('insert new user')
+
             userModel.save()
+
+            logging.info(model_to_dict(userModel))
+            logging.info('insert user success')
