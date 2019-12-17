@@ -83,6 +83,6 @@ class TextMessageHandler(Handler):
                            .replace(user.name, '')
                            .replace(user.nick_name, '')
                            .replace('@', '')
-                           .replace('\\u2005', ''))
+                           .replace('\u2005', ''))
                 break
         return target, content

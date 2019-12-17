@@ -61,6 +61,7 @@ def message(mid):
                    .select()
                    .where(MessageModel.message_id == mid)
                    .get())
+
     except Exception:
         return render_template('message.html')
 
@@ -240,12 +241,10 @@ def users():
 
 @app.route('/groups', methods=['GET'])
 def groups():
-    members = (GroupModel.select()
-               # .join(UserModel, on=(GroupModel.user_id == UserModel.user_id))
-               .where(GroupModel.group_id == '454c1ad2'))
-
-    # members = [model_to_dict(member) for member in members]
-    # return json.dumps(members)
+    members = (GroupModel.select(GroupModel, UserModel.nick_name)
+               .join(UserModel, on=(GroupModel.user_id == UserModel.user_id))
+               .where(GroupModel.group_id == '454c1ad2')
+               .namedtuples())
 
     return render_template('groups.html', members=members)
 
@@ -261,8 +260,11 @@ def group(groupid):
 def search():
     word = request.args.get('search', '')
     messages = (MessageModel
-                .select()
-                .where(MessageModel.content % '%{}%'.format(word)))
+                .select(MessageModel, UserModel.nick_name)
+                .join(UserModel,
+                      on=(MessageModel.receiver == UserModel.user_id))
+                .where(MessageModel.content % '%{}%'.format(word))
+                .namedtuples())
 
     for message in messages:
         message.type = setting.MSG_TYPES[message.type]
@@ -273,4 +275,4 @@ def search():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=False)
