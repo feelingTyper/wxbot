@@ -2,11 +2,10 @@ import os
 import logging
 import logging.handlers
 
-# logging.basicConfig(level=logging.INFO)
-
 
 def init_log(log_path, level=logging.INFO, when="D", backup=7,
-             formatter="%(levelname)s: %(asctime)s: %(filename)s:%(lineno)d * %(thread)d %(message)s",
+             formatter="%(levelname)s: %(asctime)s: \
+             %(filename)s:%(lineno)d * %(thread)d %(message)s",
              datefmt="%m-%d %H:%M:%S"):
 
     formatter = logging.Formatter(formatter, datefmt)

@@ -19,9 +19,13 @@ from src.orm.user_model import UserModel
 from src.util import util
 from src.util.util import timestamp2datestring as t2d
 from src.util.request import RemoteRequest
+from src.log import init_log
 
 
 app = Flask(__name__)
+
+
+init_log('log/app')
 
 
 @app.route('/', methods=['GET'])
