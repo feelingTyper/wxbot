@@ -57,7 +57,8 @@ database = {
             'password': 'zhangliang',
             'timeout': 10,
             'database': 'wx_spider',
-            'port': 3306
+            'port': 3306,
+            'charset': 'utf8mb4'
         }
     }
 }

@@ -150,14 +150,14 @@ def answers():
 
 def pure(content):
     user_name = None
-    if content.find('@') or content.find('\\u2005'):
+    if content.find('@') or content.find('\u2005'):
         logging.info('at user_name[{}] content[{}]'
                      .format(user_name, content))
         result = re.search(r'@([\s\S]+?)\u2005', content)
         if result:
             user_name = result.group(1)
             content = content.replace(user_name, '')
-        content = content.replace('@', '').replace('\\u2005', '')
+        content = content.replace('@', '').replace('\u2005', '')
         logging.info('at user_name[{}] content[{}]'.
                      format(user_name, content))
     return user_name, content
