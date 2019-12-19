@@ -278,5 +278,19 @@ def search():
     return render_template('questions.html', messages=messages)
 
 
+@app.route('/statistics', methods=['GET'])
+def statistics():
+    users = (MessageModel
+             .select(MessageModel.user_id)
+             .where(MessageModel.group_id == '454c1ad2')
+             .group_by(MessageModel.user_id))
+
+    active = 0
+    for user in users:
+        active = active + 1
+
+    return render_template('statistics.html', active=active)
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=False)

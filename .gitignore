@@ -6,4 +6,4 @@ downloads/
 .idea/
 *.pyc
 ut/
-static/stores/
+stores

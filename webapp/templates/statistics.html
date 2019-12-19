@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{%block title %} Messages {% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="row">
+  <table class="table table-bordered">
+      <thead>
+        <th>活跃用户</th>
+      </thead>
+      <tbody>
+          <tr>
+              <td>{{ active }}</td>
+          </tr>
+      </tbody>
+  </table>
+  </div>
+</div>
+{%endblock%}
