@@ -87,7 +87,7 @@ def message(mid):
         response = (RemoteRequest()
                     .get(setting.search_url.format(message.content)))
         response = json.loads(response)
-        for answer in response['data']['search']:
+        for answer in response['data']['search_list']:
             answer['create_time'] = t2d(answer['create_time'])
             answer['type'] = setting.search_type_name[answer['type']]
             answer['url'] = setting.article_url.format(answer['index_id'])
