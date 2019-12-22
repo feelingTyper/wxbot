@@ -1,0 +1,8 @@
+# coding: utf8
+
+MSG_STATUS = [0, 1, 2, 3]
+MSG_STATUS_UNAUDIT = 0
+MSG_STATUS_VALID = 1
+MSG_STATUS_INVALID = 2
+MSG_STATUS_UNSURE = 3
+MSG_STATUS_MAP = ['未审核', '有效', '无效', '存疑']

@@ -10,6 +10,8 @@ from flask import request
 from flask import render_template
 from playhouse.shortcuts import model_to_dict
 
+from constants import constant
+
 sys.path.append('../')
 
 from src.conf import setting
@@ -32,7 +34,8 @@ init_log('log/app')
 def messages():
     messages = (MessageModel
                 .select()
-                .where(MessageModel.group_id == '454c1ad2'))
+                .where(MessageModel.group_id == '454c1ad2')
+                .where(MessageModel.status == constant.MSG_STATUS_UNAUDIT))
 
     for message in messages:
         message.type = setting.MSG_TYPES[message.type]
@@ -293,4 +296,4 @@ def statistics():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=False)
+    app.run(host='0.0.0.0', debug=True)

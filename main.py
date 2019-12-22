@@ -12,6 +12,19 @@ from src.tasks.syncUserTask import SyncUserTask
 log.init_log('log/process')
 
 
+timers = []
+container = Container.instance()
+
+
+def shutdown(signum, timers):
+    for t in timers:
+        t.stop()
+
+
+# for s in [signal.SIGINT, signal.SIGHUP, signal.SIGTERM, signal.SIGKILL]:
+#     signal.signal(s, functools.partial(shutdown, s, timers))
+
+
 def login_callback():
     pass
     # bot.file_helper.send_message('Hello')
@@ -21,9 +34,6 @@ def logout_callback():
     pass
     # bot.file_helper.send_message('Bye')
 
-
-message = None
-container = Container.instance()
 
 bot = wxpy.Bot(
         cache_path=True,
@@ -39,9 +49,6 @@ bot.enable_puid()
         except_self=False,
         run_async=True)
 def listen_message(msg):
-    global message
-    message = msg
-    print(msg.text, msg.type)
     deal_message(msg)
 
 
@@ -63,9 +70,6 @@ def deal_message(message):
         except_self=False,
         run_async=True)
 def file_helper(msg):
-    global message
-    message = msg
-    print(msg.text, msg.type)
     msg_handlers = [
         'src.handlers.textMessageHandler.TextMessageHandler',
         'src.handlers.userHandler.UserHandler',
@@ -73,16 +77,16 @@ def file_helper(msg):
     ]
     msg_handlers = container.singletens(msg_handlers)
     for msg_handler in msg_handlers:
-        msg_handler.run(message)
+        msg_handler.run(msg)
 
 
-t1 = Timer(KeepAliveTask(bot), 1200, True)
-t2 = Timer(SyncUserTask(bot), 3600*3, True)
-t1.start()
-t2.start()
+timers.append(Timer(KeepAliveTask(bot), 1200, True))
+timers.append(Timer(SyncUserTask(bot), 3600*3, True))
+
+for t in timers:
+    t.start()
 
 
-wxpy.embed()
+bot.join()
 
-t1.stop()
-t2.stop()
+shutdown(0, timers)
